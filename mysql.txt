@@ -1,4 +1,0 @@
-mysql -u root -p
-
-id: root
-pw: 7542dd

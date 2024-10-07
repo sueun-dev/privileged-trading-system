@@ -2,7 +2,6 @@
 
 const axios = require('axios');
 const pool = require('../db');
-const { COMPANY_TRON_ADDRESS } = require('../config');
 
 exports.submitTransaction = async (req, res) => {
   const { txid } = req.body;
@@ -45,7 +44,7 @@ async function verifyTransaction(txid) {
     const toAddress = transaction.raw_data.contract[0].parameter.value.to_address;
     const amount = transaction.raw_data.contract[0].parameter.value.amount;
     const decodedAddress = decodeBase58Address(toAddress);
-    if (decodedAddress !== COMPANY_TRON_ADDRESS) return false;
+    if (decodedAddress !== "TGAntoP81FhTDm4qLXWRUqEQkk4rhn2Zos") return false; // COMPANY_TRON_ADDRESS 대신 지갑 주소를 문자열로 직접 삽입
     if (amount !== 150 * 1e6) return false; // Amount in SUN (1 TRX = 1e6 SUN)
     return true;
   } catch (error) {

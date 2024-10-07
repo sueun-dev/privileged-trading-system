@@ -179,4 +179,11 @@ psd
 thumb
 sketch
 
+# Ignore node_modules directories
+backend/node_modules/
+frontend/node_modules/
+
+# Ignore backend environment file
+/backend/.env
+
 # End of https://www.toptal.com/developers/gitignore/api/node,react

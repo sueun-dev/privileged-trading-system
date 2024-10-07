@@ -17,7 +17,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "node-cron": "^3.0.3",
-    "tronweb": "^6.0.0"
+    "tronweb": "^6.0.0",
+    "uuid": "^10.0.0"
   },
   "keywords": [],
   "author": "",

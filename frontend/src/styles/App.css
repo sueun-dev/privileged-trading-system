@@ -1,5 +1,142 @@
 /* App.css 파일: React 애플리케이션의 스타일을 정의하는 파일 */
 
+/* App.css 파일: React 애플리케이션의 스타일을 정의하는 파일 */
+
+/* 로그인 페이지 스타일 추가 */
+.auth-container {
+  background: linear-gradient(135deg, #e6f7ff, #b3d9ff); /* 배경색을 더 풍부하게 */
+  padding: 60px 40px; /* 상하 패딩을 늘려 공간을 채우기 */
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
+  margin: 80px auto; /* 위아래 마진을 넉넉히 주어 중앙에 배치 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.auth-container h2 {
+  font-size: 2.5em; /* 제목 크기를 더 키워서 눈에 띄게 */
+  color: #003366; /* 강조된 색상 사용 */
+  font-weight: bold;
+  margin-bottom: 30px; /* 제목과 입력란 사이의 여백 */
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 15px;
+  margin: 15px 0; /* 입력란 간의 여백을 추가 */
+  border: 2px solid #003366;
+  border-radius: 8px;
+  font-size: 1.1em;
+}
+
+.auth-container button {
+  background-color: #003366;
+  border: none;
+  color: #ffffff;
+  padding: 15px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* 버튼에 효과 추가 */
+  width: 100%;
+  margin-top: 20px;
+}
+
+.auth-container button:hover {
+  background-color: #00509e; /* 호버 시 더 어두운 색 */
+  transform: scale(1.05); /* 버튼을 살짝 키우기 */
+}
+
+.auth-container p {
+  margin-top: 30px; /* 텍스트와 버튼 사이 여백 */
+  font-size: 1em;
+  color: #003366;
+}
+
+.auth-container a {
+  color: #003366;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-container a:hover {
+  color: #00509e;
+  text-decoration: underline;
+}
+
+/* 전체 애플리케이션 스타일 */
+.App {
+  text-align: center;
+  font-family: 'Arial, sans-serif';
+  background: linear-gradient(135deg, #d0e8ff, #ffffff);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* 로그인 페이지 스타일 추가 */
+.auth-container {
+  background: linear-gradient(135deg, #f0f4f7, #cfd9df);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+.auth-container h2 {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.auth-container button {
+  background-color: #61dafb;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.auth-container button:hover {
+  background-color: #21a1f1;
+}
+
+.auth-container p {
+  margin-top: 20px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.auth-container a {
+  color: #61dafb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-container a:hover {
+  color: #21a1f1;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px;
+  }
+}
+
+
 /* 전체 애플리케이션 스타일 */
 .App {
   text-align: center;

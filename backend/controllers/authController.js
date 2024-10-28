@@ -55,10 +55,12 @@ exports.login = async (req, res) => {
     }
     const token = jwt.sign(
       { user_id: user.user_id, is_admin: user.is_admin },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' } // 토큰 유효기간 설정
     );
     res.json({ token });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };

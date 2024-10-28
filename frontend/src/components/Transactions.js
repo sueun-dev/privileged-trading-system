@@ -1,98 +1,184 @@
-// Transactions.js 파일: 사용자가 트랜잭션을 제출하고, 내역을 볼 수 있는 컴포넌트 정의
+// frontend/src/components/Transactions.js
 
-// React의 useEffect, useState 훅을 import
 import React, { useEffect, useState } from 'react';
-// Axios 라이브러리를 import (HTTP 요청을 보낼 때 사용)
 import axios from 'axios';
-// 스타일 파일을 import
 import '../styles/App.css';
 
-// Transactions 컴포넌트 정의
 function Transactions() {
-  // 트랜잭션 목록 상태와 트랜잭션 ID 상태를 정의
-  const [transactions, setTransactions] = useState([]); // 트랜잭션 목록을 저장할 상태
-  const [txid, setTxid] = useState(''); // 입력된 트랜잭션 ID를 저장할 상태
+  const [transactions, setTransactions] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
+  const [txid, setTxid] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [destinationAddress, setDestinationAddress] = useState('');
 
-  // 컴포넌트가 렌더링될 때 실행되는 useEffect 훅
   useEffect(() => {
-    // 트랜잭션 목록을 가져오는 비동기 함수 정의
     async function fetchTransactions() {
       try {
-        const token = localStorage.getItem('token'); // 로컬 스토리지에서 인증 토큰을 가져옴
-        // 서버에서 트랜잭션 상태를 가져옴 (인증 토큰 포함)
-        const res = await axios.get('/api/transactions/status', { headers: { 'Authorization': token } });
-        setTransactions(res.data); // 가져온 데이터를 상태에 저장
+        const token = localStorage.getItem('token');
+        const res = await axios.get('/api/transactions/status', { headers: { 'Authorization': `Bearer ${token}` } });
+        setTransactions(res.data);
       } catch (error) {
-        console.error(error); // 오류 발생 시 콘솔에 출력
+        console.error(error);
       }
     }
-    fetchTransactions(); // 함수 호출
-  }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시 한 번만 실행되도록 함
+    async function fetchWithdrawals() {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get('/api/transactions/withdrawals/status', { headers: { 'Authorization': `Bearer ${token}` } });
+        setWithdrawals(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchTransactions();
+    fetchWithdrawals();
+  }, []);
 
-  // 트랜잭션 제출을 처리하는 함수
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // 기본 폼 제출 동작 방지
+  const handleDepositSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const token = localStorage.getItem('token'); // 로컬 스토리지에서 인증 토큰을 가져옴
-      // 서버에 트랜잭션 ID 제출 (인증 토큰 포함)
-      await axios.post('/api/transactions/submit', { txid }, { headers: { 'Authorization': token } });
-      alert('트랜잭션이 제출되었습니다.'); // 제출 성공 시 알림
-      setTxid(''); // 입력된 트랜잭션 ID 초기화
-      // 제출 후 거래 내역 새로고침
-      const res = await axios.get('/api/transactions/status', { headers: { 'Authorization': token } });
-      setTransactions(res.data); // 새로 가져온 트랜잭션 데이터를 상태에 저장
+      const token = localStorage.getItem('token');
+      await axios.post('/api/transactions/submit', { txid, type: 'Deposit' }, { headers: { 'Authorization': `Bearer ${token}` } });
+      alert('트랜잭션이 제출되었습니다.');
+      setTxid('');
+      // 트랜잭션 목록 새로고침
+      const res = await axios.get('/api/transactions/status', { headers: { 'Authorization': `Bearer ${token}` } });
+      setTransactions(res.data);
     } catch (error) {
-      // 오류 발생 시 알림
       alert('트랜잭션 제출 실패: ' + (error.response?.data?.message || '알 수 없는 오류'));
     }
   };
 
-  // JSX로 UI를 렌더링
+  const handleWithdrawalSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('/api/transactions/withdraw', { amount: withdrawAmount, destination_address: destinationAddress }, { headers: { 'Authorization': `Bearer ${token}` } });
+      alert('출금 요청이 제출되었습니다.');
+      setWithdrawAmount('');
+      setDestinationAddress('');
+      // 출금 목록 새로고침
+      const res = await axios.get('/api/transactions/withdrawals/status', { headers: { 'Authorization': `Bearer ${token}` } });
+      setWithdrawals(res.data);
+    } catch (error) {
+      alert('출금 요청 실패: ' + (error.response?.data?.message || '알 수 없는 오류'));
+    }
+  };
+
   return (
     <div className="transactions-container">
-      <h2>트랜잭션 제출</h2>
-      {/* 트랜잭션 제출 폼 */}
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          placeholder="TXID 입력" 
-          value={txid} 
-          onChange={(e)=>setTxid(e.target.value)} // 입력 필드 변경 시 상태 업데이트
-          required 
-        />
-        <button type="submit">제출</button> {/* 제출 버튼 */}
-      </form>
+      <h2>트랜잭션 관리</h2>
 
-      <h3>내 트랜잭션 내역</h3>
-      {/* 트랜잭션 내역 표시 */}
-      {transactions.length === 0 ? (
-        <p>트랜잭션이 없습니다.</p> // 트랜잭션이 없을 경우 메시지 표시
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>TXID</th>
-              <th>금액 (USDT)</th>
-              <th>상태</th>
-              <th>제출 일자</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* 트랜잭션 목록을 반복하며 각 트랜잭션 데이터를 테이블에 표시 */}
-            {transactions.map(tx => (
-              <tr key={tx.transaction_id}>
-                <td>{tx.txid}</td>
-                <td>{tx.amount}</td>
-                <td>{tx.status}</td>
-                <td>{new Date(tx.created_at).toLocaleString()}</td> {/* 날짜를 사람이 읽을 수 있는 형식으로 변환 */}
+      {/* 입금 제출 섹션 */}
+      <section>
+        <h3>입금 제출</h3>
+        <form onSubmit={handleDepositSubmit}>
+          <input 
+            type="text" 
+            placeholder="TXID 입력" 
+            value={txid} 
+            onChange={(e)=>setTxid(e.target.value)} 
+            required 
+          />
+          <button type="submit">입금 제출</button>
+        </form>
+      </section>
+
+      {/* 출금 신청 섹션 */}
+      <section>
+        <h3>출금 신청</h3>
+        <form onSubmit={handleWithdrawalSubmit}>
+          <input 
+            type="number" 
+            placeholder="출금 금액 (USDT)" 
+            value={withdrawAmount} 
+            onChange={(e)=>setWithdrawAmount(e.target.value)} 
+            required 
+          />
+          <input 
+            type="text" 
+            placeholder="목적지 TRON 주소" 
+            value={destinationAddress} 
+            onChange={(e)=>setDestinationAddress(e.target.value)} 
+            required 
+          />
+          <button type="submit">출금 신청</button>
+        </form>
+      </section>
+
+      {/* 입금 내역 섹션 */}
+      <section>
+        <h3>내 입금 내역</h3>
+        {transactions.length === 0 ? (
+          <p>입금 내역이 없습니다.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>TXID</th>
+                <th>금액 (USDT)</th>
+                <th>유형</th>
+                <th>상태</th>
+                <th>제출 일자</th>
+                <th>수정 일자</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {transactions.map(tx => (
+                <tr key={tx.transaction_id}>
+                  <td>{tx.txid}</td>
+                  <td>{tx.amount}</td>
+                  <td>{tx.type}</td>
+                  <td>{tx.status}</td>
+                  <td>{new Date(tx.created_at).toLocaleString()}</td>
+                  <td>{tx.updated_at ? new Date(tx.updated_at).toLocaleString() : 'N/A'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      {/* 출금 내역 섹션 */}
+      <section>
+        <h3>내 출금 내역</h3>
+        {withdrawals.length === 0 ? (
+          <p>출금 내역이 없습니다.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>출금 ID</th>
+                <th>금액 (USDT)</th>
+                <th>수수료 (USDT)</th>
+                <th>순 금액 (USDT)</th>
+                <th>목적지 주소</th>
+                <th>상태</th>
+                <th>TXID</th>
+                <th>제출 일자</th>
+                <th>수정 일자</th>
+              </tr>
+            </thead>
+            <tbody>
+              {withdrawals.map(wd => (
+                <tr key={wd.withdrawal_id}>
+                  <td>{wd.withdrawal_id}</td>
+                  <td>{wd.amount}</td>
+                  <td>{wd.fee}</td>
+                  <td>{wd.net_amount}</td>
+                  <td>{wd.destination_address}</td>
+                  <td>{wd.status}</td>
+                  <td>{wd.txid || '없음'}</td>
+                  <td>{new Date(wd.created_at).toLocaleString()}</td>
+                  <td>{wd.updated_at ? new Date(wd.updated_at).toLocaleString() : 'N/A'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
     </div>
   );
 }
 
-// Transactions 컴포넌트를 기본으로 내보내기
 export default Transactions;

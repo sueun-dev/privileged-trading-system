@@ -11,7 +11,7 @@ function Referrals() {
     async function fetchReferrals() {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('/api/referrals', { headers: { 'Authorization': token } });
+        const res = await axios.get('/api/referrals', { headers: { 'Authorization': `Bearer ${token}` } });
         setReferrals(res.data);
       } catch (error) {
         console.error(error);

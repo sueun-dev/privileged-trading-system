@@ -14,6 +14,10 @@ The project is structured in two main parts:
 1. **Backend**: Node.js server to manage API requests, user data processing, transaction handling, and blockchain wallet integration.
 2. **Frontend**: A React-based user interface allowing users to view account information, manage wallets, track transactions, and connect to blockchain services.
 
+## Architecture Diagram
+![diagram](https://github.com/user-attachments/assets/8e0bfd25-c5b9-4563-98c7-62dba3dbceb3)
+
+
 ### Key Features
 
 - **User Authentication**: Provides secure sign-up and login processes, ensuring that user data is protected and only authorized users can access specific areas.
